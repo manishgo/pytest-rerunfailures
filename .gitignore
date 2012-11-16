@@ -1,3 +1,10 @@
 .DS_Store
 *.pyc
 *egg*
+build/lib/rerunfailures/__init__.py
+build/lib/rerunfailures/plugin.py
+build/pip-delete-this-directory.txt
+rerunfailures/.ropeproject/config.py
+rerunfailures/.ropeproject/globalnames
+rerunfailures/.ropeproject/history
+rerunfailures/.ropeproject/objectdb

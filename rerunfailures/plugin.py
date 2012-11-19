@@ -33,6 +33,14 @@ def has_setup_class_failed(callstack,item):
 			return True
 	return False
 
+def is_ignored_failure(report):
+	exception_message = report.longrepr.reprcrash.message
+	ignored_messages = ['AssertionError','Failed: DID NOT RAISE']
+	for ignored_message in ignored_messages:
+		if ignored_message in exception_message:
+			return True
+	return False
+
 
 def runtestprotocol(item, log=True, nextitem=None,is_last_run=True):
 	rep = call_and_report(item, "setup", log)
@@ -73,6 +81,8 @@ def pytest_runtest_protocol(item, nextitem):
 		nodeid=item.nodeid, location=item.location
 	)
 
+	ignored_failures = ['AssertionError','messageFailed: DID NOT RAISE']
+
 	for i in range(reruns+1):  # ensure at least one run of each item
 		reports = runtestprotocol(item, nextitem=nextitem, log=False,is_last_run=(i==reruns))
 		callstack = item.session._setupstate.stack
@@ -86,7 +96,7 @@ def pytest_runtest_protocol(item, nextitem):
 					item.session.has_setup_failed = True
 			else:
 				clear_errors(item)
-		elif reports[1].failed and 'AssertionError' in reports[1].longrepr.reprcrash.message:
+		elif reports[1].failed and is_ignored_failure(reports[1]):
 			break
 
 		if reports[0].passed and reports[1].passed:

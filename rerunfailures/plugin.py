@@ -48,7 +48,7 @@ def runtestprotocol(item, log=True, nextitem=None,is_last_run=True):
 	if rep.passed:
 		reports.append(call_and_report(item, "call", log))
 	if not reports[0].passed or not reports[1].passed:
-		if nextitem == None and not is_last_run:
+		if (nextitem == None or nextitem.parent.name!=item.parent.name) and not is_last_run:
 			callstack = item.session._setupstate.stack
 			last_index = len(callstack)-1
 			if last_index>=0 and item.name == callstack[last_index].name:  
